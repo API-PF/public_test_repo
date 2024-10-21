@@ -52,8 +52,11 @@ jobs:
       - name: Check if dir1_file1.yaml was changed
         id: check_dir1_file1
         run: |
-          git log
+          echo "git diff"
+          echo "--------------------------------"
           git diff
+          echo "git diff --name-only"
+          echo "--------------------------------"
           git diff --name-only
           if git diff --name-only HEAD^ | grep -q 'dir1/dir1_file1.yaml'; then echo "changed=true" >> $GITHUB_ENV; else echo "changed=false" >> $GITHUB_ENV; fi
         shell: bash
