@@ -52,6 +52,12 @@ jobs:
       - name: Check if dir1_file1.yaml was changed
         id: check_dir1_file1
         run: |
+          echo "pwd"
+          echo "--------------------------------"
+          pwd
+          echo "ls -l"
+          echo "--------------------------------"
+          ls -l
           echo "git diff"
           echo "--------------------------------"
           git diff
