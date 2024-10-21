@@ -49,20 +49,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          # 一つ前のコミットと比較するためクローンする深さを指定
           fetch-depth: 2
 
       - name: Check if dir1_file1.yaml was changed
         id: check_dir1_file1
         run: |
-          echo "pwd"
-          echo "--------------------------------"
-          pwd
-          echo "ls -l"
-          echo "--------------------------------"
-          ls -l
-          echo "git diff --name-only HEAD^"
-          echo "--------------------------------"
-          git diff --name-only HEAD^
           if git diff --name-only HEAD^ | grep -q 'dir1/dir1_file1.yaml'; then echo "changed=true" >> $GITHUB_ENV; else echo "changed=false" >> $GITHUB_ENV; fi
         shell: bash
 
