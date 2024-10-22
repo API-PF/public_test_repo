@@ -1,4 +1,4 @@
-name: Main
+name: git diff test
 
 on:
   push:
@@ -10,37 +10,14 @@ on:
       - 'dir2/**'
 
 jobs:
-  # -------------------------------------------------------------------------
-  # コミットメッセージによる処理分岐確認
-  # -------------------------------------------------------------------------
-  check_commit_msg_dir1:
-    # コミットメッセージに"dir1"が含まれる場合True
-    if: contains(github.event.head_commit.message, 'dir1')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
-      - name: Echo
-        run: echo "Update dir1"
-
-  check_commit_msg_dir2:
-    # コミットメッセージに"dir2"が含まれる場合True
-    if: contains(github.event.head_commit.message, 'dir2')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Echo
-        run: echo "Update dir2"
-
-  # -------------------------------------------------------------------------
-  # git diff による処理分岐確認
-  # -------------------------------------------------------------------------
+  # ----------------------------------------------------------
+  # ファイル単位で前コミットとの差分をチェックし更新有無を判定
+  # ----------------------------------------------------------
   determine-changes:
     runs-on: ubuntu-latest
 
+    # stepsで判定したtrue/falseを格納
     outputs:
       dir1_file1_changed: ${{ steps.check_dir1_file1.outputs.changed }}
       dir1_file2_changed: ${{ steps.check_dir1_file2.outputs.changed }}
@@ -52,20 +29,26 @@ jobs:
           # 一つ前のコミットと比較するためクローンする深さを指定
           fetch-depth: 2
 
+      # 更新チェック＠dir1_file1.yaml
       - name: Check if dir1_file1.yaml was changed
         id: check_dir1_file1
         run: |
           if git diff --name-only HEAD^ | grep -q 'dir1/dir1_file1.yaml'; then echo "changed=true" >> $GITHUB_OUTPUT; else echo "changed=false" >> $GITHUB_OUTPUT; fi
         shell: bash
 
+      # 更新チェック＠dir1_file2.yaml
       - name: Check if dir1_file2.txt was changed
         id: check_dir1_file2
         run: |
           if git diff --name-only HEAD^ | grep -q 'dir1/dir1_file2.txt'; then echo "changed=true" >> $GITHUB_OUTPUT; else echo "changed=false" >> $GITHUB_OUTPUT; fi
         shell: bash
 
+  # ----------------------------------------------------------
+  # 処理＠dir1_file1.yaml
+  # ----------------------------------------------------------
   deploy-dir1_file1:
     needs: determine-changes
+    # stepsでの判定結果がtrueなら動作
     if: needs.determine-changes.outputs.dir1_file1_changed == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -75,8 +58,12 @@ jobs:
       - name: Echo
         run: echo "jobs dir1_file1"
 
+  # ----------------------------------------------------------
+  # 処理＠dir1_file2.yaml
+  # ----------------------------------------------------------
   deploy-dir1_file2:
     needs: determine-changes
+    # stepsでの判定結果がtrueなら動作
     if: needs.determine-changes.outputs.dir1_file2_changed == 'true'
     runs-on: ubuntu-latest
     steps:

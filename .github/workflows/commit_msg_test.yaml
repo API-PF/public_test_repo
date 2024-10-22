@@ -1,0 +1,40 @@
+name: commit message test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/**'
+      - 'dir1/**'
+      - 'dir2/**'
+
+jobs:
+
+  # ----------------------------------------------------------
+  # dir1用
+  # ----------------------------------------------------------
+  check_commit_msg_dir1:
+    # コミットメッセージに"dir1"が含まれる場合True
+    if: contains(github.event.head_commit.message, 'dir1')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Echo
+        run: echo "Update dir1"
+
+  # ----------------------------------------------------------
+  # dir2用
+  # ----------------------------------------------------------
+  check_commit_msg_dir2:
+    # コミットメッセージに"dir2"が含まれる場合True
+    if: contains(github.event.head_commit.message, 'dir2')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Echo
+        run: echo "Update dir2"
