@@ -1,13 +1,14 @@
 name: git diff test
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/**'
-      - 'dir1/**'
-      - 'dir2/**'
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - '.github/workflows/**'
+  #     - 'dir1/**'
+  #     - 'dir2/**'
 
 jobs:
 
