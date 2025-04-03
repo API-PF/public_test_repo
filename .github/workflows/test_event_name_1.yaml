@@ -13,9 +13,12 @@ jobs:
     with:
       call_flag: true
   repository_dispatch:
-    uses: peter-evans/repository-dispatch@v3
-    with:
-      repository: ${{ github.repository_owner }}/public_test_repo
-      token: ${{ secrets.GITHUB_TOKEN }}
-      event-type: test
-      call_flag: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - uses: peter-evans/repository-dispatch@v3
+      with:
+        repository: ${{ github.repository_owner }}/public_test_repo
+        token: ${{ secrets.GITHUB_TOKEN }}
+        event-type: test
+        client-payload: '{"call_flag": true}'
