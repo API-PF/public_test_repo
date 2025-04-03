@@ -1,4 +1,4 @@
-name: 
+name: Test Event Workflow
 
 on:
   workflow_dispatch:
@@ -10,3 +10,5 @@ defaults:
 jobs:
   build-kong:
     uses: ./.github/workflows/test_event_name_2.yaml
+    inputs:
+      call_flag: true

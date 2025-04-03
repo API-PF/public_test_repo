@@ -2,6 +2,11 @@ name: Example Workflow
 
 on:
   workflow_call:
+    inputs:
+      call_flag:
+        required: false
+        type: boolean
+        default: false
   push:
   workflow_dispatch:
 
@@ -15,7 +20,7 @@ jobs:
           echo "Repository: ${{ github.repository }}"
 
   process_B:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if : ${{ inputs.call_flag == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Print GitHub Context (Process B)
