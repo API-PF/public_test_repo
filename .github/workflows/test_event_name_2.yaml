@@ -1,37 +1,24 @@
-name: 
+name: Example Workflow
 
 on:
   workflow_call:
-  workflow_dispatch:
   push:
-    branches:
-      - master
-
-defaults:
-  run:
-    shell: bash
+  workflow_dispatch:
 
 jobs:
-  echo_event:
+  process_A:
     runs-on: ubuntu-latest
-    timeout-minutes: 1
     steps:
-      - run: |
-          echo ${{ github.event.workflow_call }}
-          printf "%s" "${{ toJson(github.event) }}"
+      - name: Print GitHub Context (Process A)
+        run: |
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Repository: ${{ github.repository }}"
 
-  not_workflow_call:
-    if: ${{ github.event.workflow != '' }}
+  process_B:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 1
     steps:
-      - run: |
-          echo ${{ github.event_name }}
-
-  not_push:
-    if: ${{ github.event_name != 'push' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 1
-    steps:
-        - run: |
-            echo ${{ github.event_name }}
+      - name: Print GitHub Context (Process B)
+        run: |
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
