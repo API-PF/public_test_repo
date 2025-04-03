@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 1
     steps:
       - run: |
-          echo ${{ toJson(github.event) }} > event.json
+          printf "%s" "${{ toJson(github.event) }}" > event.json
           echo ${{ github.event.workflow_call }}
           cat event.json
 
