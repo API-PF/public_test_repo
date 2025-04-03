@@ -8,7 +8,14 @@ defaults:
     shell: bash
 
 jobs:
-  build-kong:
+  workflow_call:
     uses: ./.github/workflows/test_event_name_2.yaml
     with:
+      call_flag: true
+  repository_dispatch:
+    uses: peter-evans/repository-dispatch@v3
+    with:
+      repository: ${{ github.repository_owner }}/public_test_repo
+      token: ${{ secrets.GITHUB_TOKEN }}
+      event-type: test
       call_flag: true
