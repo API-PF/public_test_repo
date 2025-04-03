@@ -1,0 +1,38 @@
+name: 
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - ./Materials/kongdb/**
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  echo_event:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: |
+          echo ${{ toJson(github.event) }}
+
+  not_workflow_call:
+    if: github.event_name != 'workflow_call'
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: |
+          echo ${{ github.event_name }}
+
+  not_push:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+        - run: |
+            echo ${{ github.event_name }}

@@ -1,0 +1,12 @@
+name: 
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-kong:
+    uses: ./.github/workflows/test_event_name_2.yaml
